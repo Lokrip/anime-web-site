@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}{{title}}{% endblock title %}
+
+{% block menu %}
+    <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="./index.html"><i class="fa fa-home"></i> Home</a>
+                        <a href="./categories.html">Categories</a>
+                        <a href="#">Romance</a>
+                        <span>{{animeProduct.title}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock menu %}
+
+{% block content %}
+    <!-- Anime Section Begin -->
+    <section class="anime-details spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="anime__video__player">
+                        <video id="player" playsinline controls data-poster="{% if animeVideo.images %}{{animeVideo.images.url}}{% else %}{% static "default_image/images.png" %}{% endif %}">
+                            <source src="{{animeVideo.video.url}}" type="video/mp4" />
+                            <!-- Captions are optional -->
+                            <track kind="captions" label="English captions" src="#" srclang="en" default />
+                        </video>
+                    </div>
+                    <div class="anime__details__episodes">
+                        {% for animeSeson in animeSesons %}
+                            <div class="section-title">
+                                <h5>
+                                    {% if animeSeson.pk == animeSesons.first.pk %}
+                                        List Name, Seson {{animeSeson.season_number}}
+                                    {% else %}
+                                        Seson {{animeSeson.season_number}}
+                                    {% endif %} 
+                                </h5>
+                            </div>
+                            {% for episode in animeSeson.get_episode %}
+                                <a href="{{ episode.get_absolute_url }}">Ep {{episode.number_decimal}}</a>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="anime__details__review">
+                        {% with reviews=animeProduct.get_reviews %}
+                            <div class="anime__details__review">
+                                {% if reviews.exists %}
+                                    <div class="section-title">
+                                        <h5>Reviews</h5>
+                                    </div>
+                                {% endif %}
+                           
+                                {% for reviews in reviews  %}
+                                    <div class="anime__review__item">
+                                        <div class="anime__review__item__pic">
+                                            <img src="
+                                            {% if reviews.user.images %}
+                                            {{reviews.user.images.url}}
+                                            {% else %}
+                                            {% endif %}
+                                            " alt="">
+                                        </div>
+                                        <div class="anime__review__item__text">
+                                            <h6>{{reviews.user.username}} - <span>{{reviews.created_at|timesince }} ago</span></h6>
+                                            <p>{{reviews.content}}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endwith %}
+                    </div>
+                    <div class="anime__details__form">
+                        <div class="section-title">
+                            <h5>Your Comment</h5>
+                        </div>
+                        <form action="{% url 'anime-watch:anime-video' detail_slug=animeVideo.slug %}" method='post'>
+                            {% csrf_token %}
+                            {{ form.content }}
+                            {{ form.content.errors }} 
+                            <button type="submit"><i class="fa fa-location-arrow"></i> Review</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Anime Section End -->
+{% endblock content %}

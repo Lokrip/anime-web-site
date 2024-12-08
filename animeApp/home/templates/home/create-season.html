@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}{{title}}{% endblock title %}
+
+{% block menu %}
+
+{% endblock menu %}
+
+{% block content %}
+
+<section class="login spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <h3 style='color: white'>Create Season</h3>
+                <form action="{% url 'anime-home:anime-create-season' detail_slug=detail_slug %}" method='post'> 
+                    {% csrf_token %}
+
+                    {% for f in form %}
+                        <div class="form-container">
+                            <div class="input-elements" style="display: flex; margin: 30px 0; gap: 12px;">
+                                <h5 style='color: white'>{{f.label}}</h5>
+                                {{f}}
+                            </div>
+                            {% if f.errors %}
+                            <div style="color: red;">
+                                {{ f.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="site-btn" style='width: 100%;'>Создать Аниме</button>
+                </form>
+
+                <div><a href="">Пропустить</a></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

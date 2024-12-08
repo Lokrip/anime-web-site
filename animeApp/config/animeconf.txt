@@ -1,0 +1,23 @@
+[program:anime] // имя программы
+// USER тут будет пользователь каторый мы укозали в gunicorn.conf.py
+// animeApp.wsgi:application ставим свой приложение найстроки
+// /home/lokri/CMS/config/gunicorn.conf.py путь где находиться наш файл gunicorn.conf.py
+command=/home/lokri/venv/bin/gunicorn animeApp.wsgi:application -c /home/john/animeApp/config/gunicorn.conf.py
+directory=/home/lokri/CMS
+user=USER
+autorestart=true //авто перезапск сервера
+redirect_stderr=true
+stdout_logfile = /home/USER/CMS/logs/debug.log //тут файл с логами тоесть с ошибками
+
+эта программа запещенна постоянно в памяти и следит за 
+тем что наш процесс всегда работает тоесть если процесс 
+упал выключился, мы выключились перезапустился сервер он 
+автоматически подымит этот процесс
+
+тоесть эта программа постояно следит чтобы наш gunicorn всегда был запущенн
+тоесть наш вебсервер не падал
+
+
+тоесть если мы изменяем код на сайте нам нужно чтобы перезапустить сервер(gunicorn)
+для того чтобы он премянился и эта программа при изменение кода на сайте 
+автоматический измениться на сервере при перезапске его
